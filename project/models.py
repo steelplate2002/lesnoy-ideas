@@ -34,22 +34,28 @@ class Role(db.Model):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(500))
-    description = db.Column(db.Text)
+    description = db.Column(db.String(2000))
+    text = db.Column(db.Text)
     image = db.Column(db.String(1000))
 
     state_id = db.Column(db.Integer, db.ForeignKey('project_state.id'))
     state = db.relationship('Project_state',
         backref=db.backref('projects', lazy='dynamic'))
 
-    created_at = db.Column(db.Time)
+    created_at = db.Column(db.DateTime)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', foreign_keys=[author_id],
         backref=db.backref('projects_create', lazy='dynamic'))
 
-    modify_at = db.Column(db.Time)
+    modify_at = db.Column(db.DateTime)
     modifyer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     modifyer = db.relationship('User', foreign_keys=[modifyer_id],
         backref=db.backref('projects_modify', lazy='dynamic'))
+
+    def get_likes(self, like_id):
+        #patients = Patient.query.filter(Patient.mother.has(phenoscore=10))
+        likes = self.likes.filter_by(like_id=like_id).all() 
+        return len(likes)
 
 
 class Project_state(db.Model):
@@ -63,6 +69,7 @@ class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(100), unique=True)
     icon = db.Column(db.String(100))
+    color = db.Column(db.String(100))
     wieght = db.Column(db.Integer)
 
 
@@ -77,5 +84,9 @@ class User_like(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     project = db.relationship('Project',
         backref=db.backref('likes', lazy='dynamic'))
+    
+    like_id = db.Column(db.Integer, db.ForeignKey('like.id'))
+    like = db.relationship('Like',
+        backref=db.backref('project_likes', lazy='dynamic'))
 
 
