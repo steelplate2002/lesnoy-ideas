@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from .models import User
+from .models import User, Role, Land
 from . import db
 
 auth = Blueprint('auth', __name__)
@@ -49,12 +49,19 @@ def signup_post():
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
+    land = Land.query.filter_by(number=int(home_number)).first()
+    if not land:
+        land = Land(number=int(home_number))
+        db.session.add(land)
+
     # create new user with the form data. Hash the password so plaintext version isn't saved.
+    new_user_role = Role.query.filter_by(code='guest').first()
     new_user = User(email=email, 
                     name=name, 
-                    home_number=home_number, 
+                    land=land, 
                     phone_number=phone_number,
-                    password=generate_password_hash(password, method='scrypt'))
+                    password=generate_password_hash(password, method='scrypt'),
+                    role=new_user_role)
 
     # add the new user to the database
     db.session.add(new_user)

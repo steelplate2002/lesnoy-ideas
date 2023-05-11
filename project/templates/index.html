@@ -3,11 +3,82 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Добро пожаловать в наш блокнотик хороших идей!
-</h1>
-<h2 class="subtitle">
-  Дорогие соседи! Каждый день мы вместе стараемся сделать жизнь в нашем СНТ лучше. <br>
-  Этот сайт создан специально для того, чтобы каждый мог поделиться своими идеями, а также обсудить и поддержать идеи соседей.
-</h2>
+{% if not current_user.is_authenticated %}
+<div class="columns is-mobile is-centered">
+  <div class="column is-half">
+    <h1 class="title">
+      Добро пожаловать в наш блокнотик хороших идей!
+    </h1>
+    <h2 class="subtitle">
+      Дорогие соседи! Каждый день мы вместе стараемся сделать жизнь в нашем СНТ лучше.
+      Этот сайт создан специально для того, чтобы каждый мог поделиться своими идеями,
+      а также обсудить и поддержать идеи соседей.
+    </h2>
+    
+    <div class="box is-secondary">
+      <div class="buttons" style="align-content: space-between;">
+        <div class="button is-white" >Чтобы посмотреть и предложить идеи войдите или зарегистрируйтесь:</div>
+        <a class="button is-primary is-fullwidth" href="{{ url_for('auth.login') }}">Войти</a>
+        <a class="button is-link is-fullwidth" href="{{ url_for('auth.signup') }}">Зарегистрироваться</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+<div class="tile is-ancestor">
+  <div class="tile is-parent">
+    <article class="tile is-child notification is-info">
+        <p class="title">Идеи</p>
+        <a class="button is-primary is-fullwidth" href="{{ url_for('auth.login') }}">Предложить идею</a>
+        <div>
+          {% for cap in ideas %}
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4">John Smith</p>
+                  <p class="subtitle is-6">@johnsmith</p>
+                </div>
+              </div>
+          
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                <a href="#">#css</a> <a href="#">#responsive</a>
+                <br>
+                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+    </article>
+  </div>
+  <div class="tile is-parent is-vertical">
+    <article class="tile is-child notification is-primary">
+      <p class="title">В работе</p>
+      <p class="subtitle">Top tile</p>
+    </article>
+    <article class="tile is-child notification is-warning">
+      <p class="title">Архив</p>
+      <p class="subtitle">Bottom tile</p>
+    </article>
+  </div>
+</div>
+
+{% endif %}
+
 {% endblock %}

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <section class="hero is-primary is-fullheight">
+    <section class="hero is-fullheight">
 
         <div class="hero-head">
             <nav class="navbar">
@@ -30,7 +30,7 @@
                             {% endif %}
                             {% if not current_user.is_authenticated %}
                             <a href="{{ url_for('auth.login') }}" class="navbar-item">
-                                Авторизоваться
+                                Войти
                             </a>
                             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
                                 Зарегистрироваться
