@@ -1,6 +1,6 @@
 # main.py
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 from flask_login import login_required, current_user
 from .models import User, Role, Land, Project, Like, User_like
 from . import db
@@ -22,6 +22,14 @@ def index():
     else:
         return render_template('index.html')
 
+
+@main.route('/like_action/<int:project_id>/<int:like_id>')
+@login_required
+def like_action(project_id, like_id):
+    new_like = User_like(user_id=current_user.id, project_id=project_id, like_id=like_id)
+    db.session.add(new_like)
+    db.session.commit()
+    return redirect(request.referrer)
 
 
 @main.route('/profile')

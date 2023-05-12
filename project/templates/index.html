@@ -53,18 +53,16 @@
               <div class="content has-text-left">
                 {{ idea.description }}
               </div>
-              <form method="post" action="/">
               <div class="buttons">
                 {% for like in likes %}
-                <button type="submit" value="{{ current_user.id }}:{{ idea.id }}:{{ like.id }}" name="like_click" class="button is-rounded {{ like.color }}">
+                <a href="{{ url_for('main.like_action', project_id=idea.id, like_id=like.id) }}" class="button is-rounded {{ like.color }}">
                   <span class="icon is-medium">
                     <i class="{{ like.icon }}"></i>
                   </span>
                   <span>{{ idea.get_likes(like.id) }}</span>
-                </button>
+                </a>
                 {% endfor %}
               </div>
-            </form>
             </div>
           </div>
           <br>
