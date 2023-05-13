@@ -51,23 +51,39 @@ class Project(db.Model):
     modifyer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     modifyer = db.relationship('User', foreign_keys=[modifyer_id],
         backref=db.backref('projects_modify', lazy='dynamic'))
+    
+
+    def set_status(self, state_id):
+        if state_id < 6:
+            self.state_id = state_id
+            db.session.commit()
+        return
+
 
     def get_likes(self, like_id):
-        #patients = Patient.query.filter(Patient.mother.has(phenoscore=10))
         likes = self.likes.filter_by(like_id=like_id).all() 
         return len(likes)
+
+    def likes_count(self):
+        likes = Like.query.all()
+        likes_set = []
+        for like in likes:
+            likes_count = len(self.likes.filter_by(like_id=like.id).all())
+            likes_set.append({'like':like, 'count':likes_count})
+        return likes_set
 
 
 class Project_state(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     level = db.Column(db.Integer)
     name = db.Column(db.String(100))
-
+    icon = db.Column(db.String(100))
 
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(100), unique=True)
+    descr = db.Column(db.String(100))
     icon = db.Column(db.String(100))
     color = db.Column(db.String(100))
     wieght = db.Column(db.Integer)

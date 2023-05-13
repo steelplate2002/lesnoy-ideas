@@ -9,16 +9,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Наши идеи! СНТ Лесной</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/08667f8a84.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/add_scripts.js') }}"></script>
+    <style>
+        .bg-img { 
+            background-image: url('https://cnr.ncsu.edu/wp-content/uploads/sites/18/2022/09/college_natural_resources_nc_State_0031__BK-1358-1024x576.jpg') ;
+            background-position: center center;
+            background-repeat:  no-repeat;
+            background-attachment: fixed;
+            background-size:  cover;
+            background-color: #999;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // Functions to open and close a modal
+        function openModal($el) {
+            $el.classList.add('is-active');
+        }
+
+        function closeModal($el) {
+            $el.classList.remove('is-active');
+        }
+
+        function closeAllModals() {
+            (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+            closeModal($modal);
+            });
+        }
+
+        // Add a click event on buttons to open a specific modal
+        (document.querySelectorAll('.modal-button') || []).forEach(($trigger) => {
+            const modal = $trigger.dataset.target;
+            const $target = document.getElementById(modal);
+
+            $trigger.addEventListener('click', () => {
+            openModal($target);
+            });
+        });
+
+        // Add a click event on various child elements to close the parent modal
+        (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+            const $target = $close.closest('.modal');
+
+            $close.addEventListener('click', () => {
+            closeModal($target);
+            });
+        });
+
+        // Add a keyboard event to close all modals
+        document.addEventListener('keydown', (event) => {
+            const e = event || window.event;
+
+            if (e.keyCode === 27) { // Escape key
+            closeAllModals();
+            }
+        });
+        });
+    </script>
 </head>
 
 <body>
-    <section class="hero is-fullheight has-background-success-light">
-
+    <section class="hero is-fullheight is-primary bg-img">
         <div class="hero-head">
-            <nav class="navbar">
+             <nav class="navbar">
                 <div class="container">
-
                     <div id="navbarMenuHeroA" class="navbar-menu">
                         <div class="navbar-end">
                             <a href="{{ url_for('main.index') }}" class="navbar-item">
@@ -44,6 +101,14 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="navbar-brand">
+                        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="burger"
+                           onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');document.querySelector('.navbar-burger').classList.toggle('is-active');">
+                          <span aria-hidden="true"></span>
+                          <span aria-hidden="true"></span>
+                          <span aria-hidden="true"></span>
+                        </a>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -55,6 +120,52 @@
             </div>
         </div>
     </section>
+    <div id="modal-create-idea" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Новая идея</p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+            <form method="POST" action="{{ url_for('main.new_idea') }}">
+                <div class="field">
+                    <label class="label">Заголовок:</label>
+                    <div class="control">
+                        <input class="input is-primary" type="text"  name="title" placeholder="Название" required>
+                    </div>
+                    <p class="help is-primary">Название идеи будет отображаться как заголовок</p>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-primary" type="text"  name="image" placeholder="Ссылка на картинку">
+                    </div>
+                    <p class="help is-primary">Можете приложить ссылку на картинку, которая будет отображаться в заголовке</p>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <textarea class="textarea is-primary" name="description" placeholder="Короткое описание" required></textarea>
+                    </div>
+                    <p class="help is-primary">Опишите коротко суть идеи</p>
+                </div>
+                <div class="field">
+                    <label class="label">Подробное описание:</label>
+                    <div class="control">
+                        <textarea class="textarea is-primary" name="text" placeholder="Опишите идею подробно: что нужно сделать и какая от этого будет польза." rows="18"></textarea>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-primary" type="submit">Предложить</button>
+                  </div>
+                  <div class="control">
+                    <button class="button is-light" formaction="" formnovalidate="true" formmethod="get">Отмена</button>
+                  </div>
+                </div>
+            </form>
+          </section>
+        </div>
+      </div>
 </body>
 
 </html>

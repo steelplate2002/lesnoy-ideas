@@ -1,0 +1,57 @@
+<!-- templates/login.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container is-max-desktop">
+    <div class="notification">
+        <a class="delete" href="{{ url_for('main.index') }}"></a>
+        <div class="media block">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="{{ project.image }}" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4 has-text-dark">{{ project.title }}</p>
+              <p class="subtitle is-7 has-text-grey"><b>Автор:</b> {{ project.author.name }} {{project.created_at}}
+              <br><b>Последнее изменение:</b> {{ project.modifyer.name }} {{project.modify_at}}</p>
+            </div>
+            <div class="tags has-addons">
+                <span class="tag is-info is-small">
+                    <span class="icon is-medium">
+                        <i class="{{ project.state.icon }}"></i>
+                    </span>
+                    <span>{{ project.state.name }}</span>
+                </span>
+                <a class="tag is-dark is-is-small" href="{{ url_for('project.project_set_state', project_id=project.id, state_id=project.state.id+1) }}">
+                    >>
+                </a>
+            </div>
+        </div>
+        <div class="block has-text-left has-text-dark">
+            {{ project.description }}
+        </div>
+        <div class="block has-text-left has-text-dark">
+            {{ project.text }}
+        </div>
+        <div class="buttons">
+            {% for like in project.likes_count() %}
+            <button data-tooltip="{{ like.like.descr }}" onclick="like_idea({{ project.id }}, {{like.like.id}});" class="button has-tooltip-{{ like.like.color }} is-rounded has-text-{{ like.like.color }}">
+                <span class="icon is-medium">
+                  <i class="{{ like.like.icon }}"></i>
+                </span>
+                <span id="lc_{{ project.id }}_{{ like.like.id }}">{{ project.get_likes(like.like.id) }}
+                </span>
+              </button>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="box has-background-warning">
+        <h1 class="subtitle has-text-left has-text-black">Комментарий правления:</h1>
+        <div class="block has-text-left has-text-dark">
+            {{ project.text }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+.bg-img { 
+    background-image: url('https://cnr.ncsu.edu/wp-content/uploads/sites/18/2022/09/college_natural_resources_nc_State_0031__BK-1358-1024x576.jpg') ;
+    background-position: center center;
+    background-repeat:  no-repeat;
+    background-attachment: fixed;
+    background-size:  cover;
+    background-color: #999;
+
+}
+
+.img-responsive {
+  display: block; 
+  max-width: 100%;
+  height: auto;
+} 

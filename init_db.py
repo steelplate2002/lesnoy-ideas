@@ -1,5 +1,6 @@
 from project import db, create_app, models
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 with create_app().app_context():
     db.drop_all()
@@ -10,16 +11,16 @@ with create_app().app_context():
     manager = models.Role(code='manager', name='Член правления', level=51)
     admin = models.Role(code='admin', name='Администратор', level=101)
 
-    state_idea = models.Project_state(level=0,name='Идея')
-    state_indevelopment = models.Project_state(level=5,name='В проработке')
-    state_inprogress = models.Project_state(level=10,name='На реализации')
-    state_done = models.Project_state(level=15,name='Реализовано')
-    state_arch = models.Project_state(level=20,name='Архив')
+    state_idea = models.Project_state(level=0,name='Идея',icon='fa-regular fa-lightbulb')
+    state_indevelopment = models.Project_state(level=5,name='В проработке',icon='fa-solid fa-pen-ruler')
+    state_inprogress = models.Project_state(level=10,name='На реализации',icon='fa-solid fa-hammer')
+    state_done = models.Project_state(level=15,name='Реализовано',icon='fa-solid fa-circle-check')
+    state_arch = models.Project_state(level=20,name='Архив',icon='fa-solid fa-box-archive')
 
-    g2_like = models.Like(code='++', icon='fa-regular fa-face-grin-stars', wieght=2, color='has-text-success')
-    g1_like = models.Like(code='+', icon='fa-regular fa-face-grin', wieght=1, color='has-text-primary')
-    b1_like = models.Like(code='-', icon='fa-regular fa-face-rolling-eyes', wieght=-1, color='has-text-warning')
-    b2_like = models.Like(code='--', icon='fa-regular fa-face-angry', wieght=-2, color='has-text-danger')
+    g2_like = models.Like(code='++', icon='fa-regular fa-face-grin-stars', descr='Супер!', wieght=2, color='success')
+    g1_like = models.Like(code='+', icon='fa-regular fa-face-grin', descr='Звучит неплохо', wieght=1, color='primary')
+    b1_like = models.Like(code='-', icon='fa-regular fa-face-rolling-eyes', descr='Сомнительно...', wieght=-1, color='warning')
+    b2_like = models.Like(code='--', icon='fa-regular fa-face-angry', descr='Ну уж нет!', wieght=-2, color='danger')
 
     db.session.add(state_idea)
     db.session.add(state_indevelopment)
@@ -40,7 +41,7 @@ with create_app().app_context():
     db.session.commit()
 
     land = models.Land(number=1)
-    user = models.User(email='qwe@qwe', password='qwe', land=land, name='qwe', role=guest)
+    user = models.User(email='qwe@qwe', password=generate_password_hash('qwe', method='scrypt'), land=land, name='qwe', role=guest)
     project = models.Project(title='Сделать хорошо',
                              description='Счастье для всех, даром, и пусть никто не уйдет обиженным!',
                              image='https://cdn-icons-png.flaticon.com/512/6213/6213355.png',
