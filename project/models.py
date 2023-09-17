@@ -64,6 +64,12 @@ class Project(db.Model):
         likes = self.likes.filter_by(like_id=like_id).all() 
         return len(likes)
 
+
+    def get_user_like(self, like_id, user_id):
+        likes = len(self.likes.filter_by(like_id=like_id, user_id=user_id).all())
+        return likes > 0
+    
+
     def likes_count(self):
         likes = Like.query.all()
         likes_set = []

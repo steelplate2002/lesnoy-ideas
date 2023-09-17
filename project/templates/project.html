@@ -35,9 +35,15 @@
         <div class="block has-text-left has-text-dark">
             {{ project.text }}
         </div>
-        <div class="buttons">
+        <div class="buttons" id="lb_{{ project.id }}">
             {% for like in project.likes_count() %}
-            <button data-tooltip="{{ like.like.descr }}" onclick="like_idea({{ project.id }}, {{like.like.id}});" class="button has-tooltip-{{ like.like.color }} is-rounded has-text-{{ like.like.color }}">
+            <button data-tooltip="{{ like.like.descr }}" onclick="like_idea({{ project.id }}, {{like.like.id}});" 
+            {% if project.get_user_like(like.like.id, current_user.id) %}
+                class="button has-tooltip-{{ like.like.color }} is-rounded has-background-{{ like.like.color }}"
+            {% else %}
+                class="button has-tooltip-{{ like.like.color }} is-rounded has-text-{{ like.like.color }}"
+            {% endif %}
+                >
                 <span class="icon is-medium">
                   <i class="{{ like.like.icon }}"></i>
                 </span>

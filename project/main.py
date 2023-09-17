@@ -23,12 +23,14 @@ def index():
 @main.route('/like_action/<int:project_id>/<int:like_id>')
 @login_required
 def like_action(project_id, like_id):
-    new_like = User_like(user_id=current_user.id, project_id=project_id, like_id=like_id)
-    db.session.add(new_like)
+    existing_like = User_like.query.filter_by(project_id=project_id, user_id=current_user.id).first()
+    if existing_like:
+        existing_like.like_id=like_id
+    else:
+        new_like = User_like(user_id=current_user.id, project_id=project_id, like_id=like_id)
+        db.session.add(new_like)
     db.session.commit()
-    project = Project.query.filter_by(id=project_id).first()
-    likes_count = project.get_likes(like_id)
-    return {'new_count':likes_count} #redirect(request.referrer)
+    return {}, 200
 
 
 @main.route('/new_idea', methods=['POST'])

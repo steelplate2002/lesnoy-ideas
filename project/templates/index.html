@@ -59,15 +59,21 @@
               <div class="content">
                 <a class="button is-primary is-outlined is-fullwidth" href="{{ url_for('main.project_detail', project_id=idea.id) }}">Подробнее</a>
               </div>
-              <div class="buttons">
+              <div class="buttons" id="lb_{{ idea.id }}">
                 {% for like in likes %}
-                <button data-tooltip="{{ like.descr }}" onclick="like_idea({{ idea.id }}, {{like.id}});" class="button has-tooltip-{{ like.color }} is-rounded has-text-{{ like.color }}">
-                  <span class="icon is-medium">
-                    <i class="{{ like.icon }}"></i>
-                  </span>
-                  <span id="lc_{{ idea.id }}_{{ like.id }}">{{ idea.get_likes(like.id) }}
-                  </span>
-                </button>
+                  <button data-tooltip="{{ like.descr }}" onclick="like_idea({{ idea.id }}, {{like.id}});" 
+                  {% if idea.get_user_like(like.id, current_user.id) %}
+                      class="button has-tooltip-{{ like.color }} is-rounded has-background-{{ like.color }}"
+                  {% else %}
+                      class="button has-tooltip-{{ like.color }} is-rounded has-text-{{ like.color }}"
+                  {% endif %}
+                      >
+                    <span class="icon is-medium">
+                      <i class="{{ like.icon }}"></i>
+                    </span>
+                    <span id="lc_{{ idea.id }}_{{ like.id }}">{{ idea.get_likes(like.id) }}
+                    </span>
+                  </button>
                 {% endfor %}
               </div>
             </div>
